@@ -12,9 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SEv1"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".NaoConfirmado"
+            android:exported="true" />
         <activity android:name=".CadastroActivity" />
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

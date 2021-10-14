@@ -35,11 +35,13 @@ public class LoginActivity extends AppCompatActivity {
 
         //verificarUsuarioLogado();
         inicializarComponentes();
+        progressBar.setVisibility(View.GONE);
 
         botaoLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                progressBar.setVisibility(View.VISIBLE);
 
                 String textoEmail = campoEmail.getText().toString();
                 String textoSenha = campoSenha.getText().toString();
@@ -53,12 +55,14 @@ public class LoginActivity extends AppCompatActivity {
                         validarLogin(usuario);
 
                     } else{
+                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(LoginActivity.this,
                                 "Preencha o sua senha!",
                                 Toast.LENGTH_SHORT).show();
                     }
 
                 } else{
+                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(LoginActivity.this,
                             "Preencha o seu email!",
                             Toast.LENGTH_SHORT).show();
@@ -89,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
                 if(!task.isSuccessful()){
+                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(LoginActivity.this,
                             "Erro ao fazer login!",
                             Toast.LENGTH_SHORT).show();
@@ -106,11 +111,38 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void resetPassword(View view){
+        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+
+        if (!campoEmail.getText().toString().isEmpty()) {
+            autenticacao.sendPasswordResetEmail(campoEmail.getText().toString())
+                    .continueWith(task -> {
+                        progressBar.setVisibility(View.VISIBLE);
+                if (task.isSuccessful()) {
+                    Toast.makeText(LoginActivity.this,
+                            "Um email foi enviado para resetar sua senha!",
+                            Toast.LENGTH_SHORT).show();
+                } else{
+                    Toast.makeText(LoginActivity.this,
+                            "Não foi possivel enviar email!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                campoSenha.setText("");
+                progressBar.setVisibility(View.GONE);
+                return null;
+            });
+        } else{
+            Toast.makeText(LoginActivity.this,
+                    "Por favor, digite um email!",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void inicializarComponentes(){
         campoEmail = findViewById(R.id.email_login);
         campoSenha = findViewById(R.id.senha_login);
         botaoLogin = findViewById(R.id.btn_logar);
-        //progressBar = findViewById(R.id.progress_cadastro);
+        progressBar = findViewById(R.id.progress_login);
 
         campoEmail.requestFocus();
     }

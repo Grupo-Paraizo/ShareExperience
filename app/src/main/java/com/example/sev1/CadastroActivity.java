@@ -36,6 +36,8 @@ public class CadastroActivity extends AppCompatActivity {
 
         inicializarComponentes();
 
+        progressBar.setVisibility(View.GONE);
+
         //cadastrar usuario
         progressBar.setVisibility(View.GONE);
 
